@@ -1,0 +1,8 @@
+/* Once per document opening; route changes never restart the splash. */
+(()=>{
+const panel=document.getElementById('aksiSplash'),app=document.getElementById('app'),image=document.getElementById('splashImage'),enter=document.getElementById('splashEnter');
+if(!panel)return;let timer=null,guard=null,closed=false,started=false;app.inert=true;
+function close(){if(closed)return;closed=true;clearTimeout(timer);clearTimeout(guard);panel.hidden=true;app.inert=false;document.documentElement.scrollTop=0;document.body.scrollTop=0;const focus=app.querySelector('h1');if(focus){focus.setAttribute('tabindex','-1');focus.focus({preventScroll:true})}}
+function start(){if(started||closed)return;started=true;timer=setTimeout(close,3000)}
+enter.addEventListener('click',close);panel.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();close()}if(e.key==='Tab'){e.preventDefault();enter.focus()}});enter.focus({preventScroll:true});image.addEventListener('load',start,{once:true});image.addEventListener('error',close,{once:true});guard=setTimeout(close,8000);if(image.complete){if(image.naturalWidth)start();else close()}
+})();

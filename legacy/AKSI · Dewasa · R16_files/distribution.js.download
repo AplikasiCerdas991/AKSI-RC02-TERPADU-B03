@@ -1,0 +1,5 @@
+(()=>{
+function help(){go('welcome');const guide=document.querySelector('.intro-guide');if(guide){guide.open=true;guide.scrollIntoView({block:'start'})}}
+window.aksiHelp=help;
+const baseRender=render;render=function(){baseRender();if(route==='home'){const menu=document.querySelector('#app .menu');if(menu){const box=document.createElement('div');box.innerHTML=navItem('Panduan & Bantuan','Cara guna dan maklumat untuk dihubungi','aksiHelp()');menu.append(box)}}};render();
+})();

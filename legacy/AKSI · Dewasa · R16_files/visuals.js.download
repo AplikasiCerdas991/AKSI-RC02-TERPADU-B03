@@ -1,0 +1,18 @@
+/* Approved M01 assets reused without modifying the source artwork. */
+(()=>{
+const baseRender=render;
+function figure(key,alt,identity=false){const f=document.createElement('figure');f.className='m01-visual '+(identity?'m01-identity':'');const img=document.createElement('img');img.src=M01_ASSETS[key];img.alt=alt;img.decoding='async';f.append(img);return f}
+render=function(){baseRender();const sample=Number.isInteger(part)&&part>=0&&part<9;if(!['home','learn','flash'].includes(route)&&!(route==='phrase'&&sample))return;const screen=document.querySelector('#app .screen'),head=screen?.querySelector('header');if(!head)return;
+const child=kid();let anchor=head;
+if(route==='home'){const identity=figure('identity','Banner pengasas dan identiti ACG — Aplikasi Cerdas Global, AKSI — Aplikasi Sayyidul Isytighfar, dan ATS — Aplikasi Tajwid SMART.',true);anchor.insertAdjacentElement('afterend',identity);anchor=identity;}
+const sampleKey=(child?'child':'adult')+'-b'+String(part+1).padStart(2,'0');
+const key=route!=='home'&&sample&&M01_ASSETS[sampleKey]?sampleKey:route==='home'?(child?'child-home':'adult-s01'):route==='learn'?(child?'child-learn':'adult-learn'):(child?'child-flash':'adult-tf');
+const themes=['Berdoa dengan rendah hati kepada Allah','Mengabdikan diri kepada Allah melalui solat','Menghargai ciptaan Allah dengan rendah hati','Berusaha menunaikan amanah mengikut kemampuan','Memilih sikap yang baik dan menahan diri daripada keburukan','Bersyukur atas nikmat makanan dan keluarga','Bermuhasabah dan mengakui kesilapan','Memohon keampunan Allah dengan penuh harapan','Berdoa dengan keyakinan bahawa hanya Allah mengampuni dosa'];
+const theme=themes[part];
+const alt=route!=='home'&&sample?`Contoh visual Bahagian ${part+1} · ${child?'Kanak-kanak':'Dewasa'}: ${theme}.`:route==='home'?(child?'Visual pembukaan kanak-kanak daripada M01.':'Visual pembukaan dewasa daripada M01.'):route==='learn'?(child?'Kanak-kanak belajar dengan telefon, visual M01.':'Dewasa belajar dengan telefon, visual M01.'):(child?'Kanak-kanak berfikir dan mengingat semula, visual M01.':'Dewasa berfikir dan mengingat semula, visual M01.');
+const image=figure(key,alt);anchor.insertAdjacentElement('afterend',image);
+if(route!=='home'&&(part===3||part===6)){
+const note=document.createElement('p');note.className='tiny';note.textContent=part===3?'Visual amanah ialah contoh tanggungjawab harian. Makna doa merujuk kepada perjanjian dan janji Allah, sesuai dengan kemampuan.':'Visual ini membantu penghayatan sikap mengakui kesilapan. Dalam doa, pengakuan dosa ditujukan kepada Allah.';image.insertAdjacentElement('afterend',note);
+}
+};render();
+})();

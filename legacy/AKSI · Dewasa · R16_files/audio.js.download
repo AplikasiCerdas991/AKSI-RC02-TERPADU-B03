@@ -1,0 +1,38 @@
+/* Same device speech source and utterance settings as M01 R09. */
+(()=>{
+let active=null,timer=null,generation=0;
+const synth=()=>window.speechSynthesis;
+function message(text){const n=document.getElementById('audio-status');if(n)n.textContent=text}
+function stop(){generation++;clearTimeout(timer);timer=null;const prior=active;active=null;if(prior){prior.button.textContent='🔊 Dengar';prior.button.setAttribute('aria-pressed','false')}try{synth()?.cancel()}catch(e){}}
+function play(text,button){if(active?.button===button){stop();message('Bacaan dihentikan.');return}stop();if(!synth()||typeof SpeechSynthesisUtterance==='undefined'){message('Audio tidak dapat dimainkan pada pelayar ini. Cuba Chrome pada Android atau Safari pada iPhone.');return}
+const id=generation,u=new SpeechSynthesisUtterance(text);u.lang='ar-SA';u.rate=.72;u.pitch=1;u.volume=1;
+active={button,u};button.textContent='■ Hentikan';button.setAttribute('aria-pressed','true');message('Menyediakan bacaan…');
+const finish=(error)=>{if(generation!==id)return;clearTimeout(timer);timer=null;active=null;button.textContent=error?'🔊 Cuba Lagi':'🔊 Dengar Lagi';button.setAttribute('aria-pressed','false');message(error?'Audio tidak dapat dimainkan atau diselesaikan. Semak suara Arab dan kelantangan media, kemudian cuba lagi.':'Bacaan selesai.');if(error){generation++;try{synth().cancel()}catch(e){}}};
+u.onstart=()=>{if(generation===id)message('Audio sedang dimainkan…')};u.onend=()=>finish(false);u.onerror=()=>finish(true);
+timer=setTimeout(()=>finish(true),Math.max(20000,text.length*650));
+try{synth().speak(u)}catch(e){finish(true)}
+}
+function mount(){
+const root=document.getElementById('app');if(!root)return;
+const targets=[...root.querySelectorAll('[lang="ar"]')].filter(el=>!el.parentElement?.closest('[lang="ar"]'));
+targets.forEach(el=>{const text=el.textContent.trim();if(!/[\u0600-\u06ff]/.test(text))return;const b=document.createElement('button');b.type='button';b.className='audio-listen';b.textContent='🔊 Dengar';b.setAttribute('aria-label','Dengar bacaan '+text);b.setAttribute('aria-pressed','false');b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();play(text,b)});
+// Keep listen buttons separate from selectable answers and their disabled state.
+const answer=el.closest('button');const anchor=answer||el;anchor.insertAdjacentElement('afterend',b);
+});
+const screen=root.querySelector('.screen');if(!screen)return;
+if(route==='quiz'&&quiz[qi]?.w>=0&&!quiz[qi].arabic){
+const text=sections[part][2][quiz[qi].w][0];const b=document.createElement('button');b.type='button';b.className='audio-listen';b.textContent='🔊 Dengar';b.setAttribute('aria-label','Dengar bacaan '+text);b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>play(text,b));screen.querySelector('h2')?.insertAdjacentElement('afterend',b);
+}
+if(route==='full'){
+const b=document.createElement('button');b.type='button';b.className='btn alt audio-listen';b.textContent='🔊 Dengar Doa Lengkap';b.addEventListener('click',()=>play(sections.map(s=>s[0]).join('، '),b));screen.querySelector('h2')?.insertAdjacentElement('afterend',b);
+}
+const box=document.createElement('div');box.className='audio-help';const status=document.createElement('p');status.id='audio-status';status.setAttribute('role','status');status.setAttribute('aria-live','polite');status.textContent='Tekan Dengar untuk memainkan bacaan.';box.append(status);
+const note=document.createElement('p');note.className='tiny';note.textContent='Suara mesin sementara, bukan bacaan qari. Sumber suara dan kelajuan sama seperti M01; suara Arab bergantung pada peranti.';box.append(note);
+const details=document.createElement('details');details.innerHTML='<summary>Jika audio senyap</summary><p class="tiny">Buka dalam Chrome pada Android atau Safari pada iPhone. Semak kelantangan media, fon telinga atau Bluetooth. Suara Arab perlu tersedia pada peranti. Cuba buka semula pautan jika audio tidak dimainkan.</p>';box.append(details);
+screen.querySelector('footer')?.insertAdjacentElement('beforebegin',box);
+}
+const baseRender=render;render=function(){stop();baseRender();mount()};
+window.askMountAudio=mount;window.askStopAudio=stop;
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stop()});window.addEventListener('pagehide',stop);
+render();
+})();

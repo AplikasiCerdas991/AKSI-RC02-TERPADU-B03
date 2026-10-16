@@ -1,0 +1,9 @@
+/* Navigation uses a document listener as well as the original HTML controls. */
+(()=>{
+const originalGo=go;
+go=function(next){originalGo(next);const reset=()=>{document.documentElement.scrollTop=0;document.body.scrollTop=0;window.scrollTo({top:0,left:0,behavior:'instant'});};reset();requestAnimationFrame(reset)};
+const actions={go:r=>go(r),resume:()=>resume(),openPart:(...a)=>openPart(...a),startQuiz:(...a)=>startQuiz(...a),startFinal:(...a)=>startFinal(...a),aksiHelp:()=>window.aksiHelp(),aksiJourneyToggle:()=>aksiJourneyToggle(),aksiOpenReference:i=>window.aksiOpenReference(i),continueQuiz:()=>continueQuiz(),continueFinal:()=>continueFinal()};
+document.addEventListener('click',event=>{const control=event.target.closest('button[onclick]');if(!control||control.disabled)return;const source=control.getAttribute('onclick').trim();const match=/^([A-Za-z]+)\((.*?)\)$/.exec(source);if(!match||!actions[match[1]])return;const raw=match[2].trim();const args=[];if(raw){for(const value of raw.split(',')){const v=value.trim();if(/^'[^']*'$/.test(v))args.push(v.slice(1,-1));else if(/^-?\d+$/.test(v))args.push(Number(v));else return;}}
+event.preventDefault();event.stopImmediatePropagation();actions[match[1]](...args);
+},true);
+})();

@@ -1,0 +1,1 @@
+window.ASK_ASSET_URLS={};

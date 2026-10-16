@@ -1,0 +1,38 @@
+[
+  {
+    "id": "learn",
+    "short": "Belajar",
+    "title": "Belajar bahagian & kalimah",
+    "description": "Baca frasa dan makna, kenali unit makna dalam konteks, kemudian dengar mengikut keperluan."
+  },
+  {
+    "id": "practice",
+    "short": "Latihan",
+    "title": "Latihan bahagian",
+    "description": "Gunakan Kad Imbas dan semakan setiap bahagian. Bank pilihan makna dan susunan mengikut baseline AKSI."
+  },
+  {
+    "id": "reinforce",
+    "short": "Pengukuhan",
+    "title": "Pengukuhan jawapan salah",
+    "description": "Ulang soalan latihan bahagian yang masih perlu pengukuhan. Rekod pertama dikekalkan; jawapan belum dicuba tidak dikira salah."
+  },
+  {
+    "id": "full",
+    "short": "Doa lengkap",
+    "title": "Semakan doa lengkap",
+    "description": "Sembilan soalan makna frasa mengikut polisi AKSI. Keputusan pertama dan terkini disimpan berasingan."
+  },
+  {
+    "id": "retention",
+    "short": "Ingatan",
+    "title": "Semakan ingatan 24 jam",
+    "description": "Semak selepas waktu kelayakan yang dijadualkan daripada semakan doa lengkap pertama mengikut jam peranti."
+  },
+  {
+    "id": "reflect",
+    "short": "Hayati",
+    "title": "Hayati & amalkan",
+    "description": "Baca renungan asal dan bahan sokongan yang diluluskan. Tiada markah daripada membaca, mendengar atau membuka halaman."
+  }
+]
